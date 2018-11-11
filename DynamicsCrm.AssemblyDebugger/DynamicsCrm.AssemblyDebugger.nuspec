@@ -21,9 +21,9 @@
     <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
     <projectUrl>http://github.com/nikicac/DynamicsCrm.AssemblyDebugger</projectUrl>
 
-    <!-- The icon is used in Visual Studio's package manager UI -->
+    <!-- The icon is used in Visual Studio's package manager UI 
     <iconUrl>http://github.com/contoso/UsefulStuff/nuget_icon.png</iconUrl>
-
+    -->
     <!-- 
             If true, this value prompts the user to accept the license when
             installing the package. 
@@ -34,20 +34,18 @@
     <releaseNotes>First release version. Compiled with .net 4.5.2, Sdk 8.0. Should work with all next versions. Tested also with 4.6.1/9.0.
                   
                   Only known issue: with some assembly projects, CrmServiceClient needs to be reinitialized after Plugin/Code activitity is executed. 
-                  just add something like: yourCrmServiceClient = new CrmServiceClient(yourConnectionString)"
+                  If this happens, just add something like this to your project between calls of *Executor.Execute: "yourCrmServiceClient = new CrmServiceClient(yourConnectionString)"
     </releaseNotes>
 
-    <!-- 
-            The description can be used in package manager UI. Note that the
-            nuget.org gallery uses information you add in the portal. 
-        -->
-    <description>Debbugging Dynamics CRM IPlugin and CodeActivity functions without deployment and profiling.</description>
+    <summary>Debbugging Dynamics CRM IPlugin and CodeActivity Execute method without deployment and profiling.</summary>
+    <description>Debbugging Dynamics CRM IPlugin and CodeActivity Execute method without deployment and profiling. 
+    Use to imporve quality and productivity of your Dynamics CRM testing and debugging.</description>
 
     <!-- Copyright information -->
     <copyright>Nikica Cvitkušić</copyright>
 
     <!-- Tags appear in the gallery and can be used for tag searches -->
-    <tags>Dynamics CRM 365 Plugin CodeActivity IPlugin Workflow Debugging</tags>
+    <tags>Dynamics CRM 365 Plugin CodeActivity IPlugin Execute Workflow Debugging</tags>
 
     <!-- Dependencies are automatically installed when the package is installed -->
     <dependencies>
