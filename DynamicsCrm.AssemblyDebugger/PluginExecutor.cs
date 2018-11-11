@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CrmAssemblyDebugger.Fakes;
+using DynamicsCrm.AssemblyDebugger.Fakes;
 using Microsoft.Xrm.Sdk;
 
-namespace CrmAssemblyDebugger
+namespace DynamicsCrm.AssemblyDebugger
 {
     public class PluginExecutor
     {
-        public static void Execute(IPlugin plugin
+        public static void Execute(
+            IPlugin plugin
             , IOrganizationService service, PluginExecutionContextFake context
             , ITracingService tracingService = null
             , IServiceEndpointNotificationService notificationService = null
-            , IOrganizationServiceFactory factory = null)
+           )
         {
             ServiceProviderFake serviceProvider = new ServiceProviderFake();
             serviceProvider.MyPluginExecutionContext = context;
-
-           serviceProvider.MyTracingServiceFake = new TracingServiceFake();
-            if(tracingService != null)
+            serviceProvider.MyTracingServiceFake = new TracingServiceFake();
+            if (tracingService != null)
                 serviceProvider.MyTracingServiceFake.crmTracingService = tracingService;
 
             serviceProvider.MyOrganizationServiceFactory = new OrganizationServiceFactoryFake();

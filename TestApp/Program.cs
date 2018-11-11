@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Collections.Generic;
-using CrmAssemblyDebugger;
+using DynamicsCrm.AssemblyDebugger;
+using DynamicsCrm.AssemblyDebugger.Fakes;
 using Microsoft.Xrm.Tooling.Connector;
 
 using Microsoft.Xrm.Sdk;
-using CrmAssemblyDebugger.Fakes;
 using Microsoft.Crm.Sdk.Messages;
 using YourCodeActivities;
 using YourPlugins;
@@ -17,26 +17,29 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            CrmServiceClient crmServiceClient = new CrmServiceClient(
-                //ConfigurationManager.ConnectionStrings["ConnectionStringName"].ConnectionString 
-                "AuthType=Office365; Url=https://yoururl.crm.dynamics.com; UserName=username@yourcomapny.onmicrosoft.com; Password=YourPassword;"
-            );
-            IOrganizationService os = crmServiceClient;
+            var cs = "AuthType=Office365; Url=https://yoururl.crm.dynamics.com; UserName=username@yourcomapny.onmicrosoft.com; Password=YourPassword;";
+            
+            CrmServiceClient client = new CrmServiceClient(cs);
+            IOrganizationService os = client;
             WhoAmIRequest req = new WhoAmIRequest();
-            WhoAmIResponse resp = (WhoAmIResponse)crmServiceClient.Execute(req);
+            WhoAmIResponse resp = (WhoAmIResponse)client.Execute(req);
           
             // run plugin
-            SamplePluginExecute(crmServiceClient, resp.UserId);
+            SamplePluginExecute(client, resp.UserId);
             //run code activity
-            var workflowOutputs = SampleCodeActivityInvoke(crmServiceClient);
+            var workflowOutputs = SampleCodeActivityExecute(client, resp.UserId);
+            // sample plugin secure
+            SamplePluginNoTrustExecute(client, resp.UserId);
         }
 
-        static IDictionary<string, object> SampleCodeActivityInvoke(CrmServiceClient crmServiceClient)
+        static IDictionary<string, object> SampleCodeActivityExecute(CrmServiceClient client, Guid userId)
         {
             var myActivity = new TestActivity();
             CodeActivityContextFake context = new CodeActivityContextFake();
             Dictionary<string, object> inputs = new Dictionary<string, object>();
             context = new CodeActivityContextFake();
+            context.InitiatingUserId = userId;
+            context.UserId = userId;
             context.PrimaryEntityName = "opportunity";
             context.PrimaryEntityId = new Guid("2A2B61B9-1234-ABCD-7891-B3223BFC9624");
             inputs = new Dictionary<string, object>();
@@ -48,23 +51,50 @@ namespace TestApp
             inputs.Add(nameof(myActivity.DecimalInputOutput), (decimal)10.23);
             inputs.Add(nameof(myActivity.MoneyInputOutput), new Money(10));
  
-            return CrmWorkflowInvoker.Invoke(myActivity, crmServiceClient, context, inputs);
+            return CodeActivityExecutor.Execute(myActivity, client, context, inputs);
         }
 
 
-        static void SamplePluginExecute(CrmServiceClient crmServiceClient, Guid userId)
+        static void SamplePluginExecute(CrmServiceClient client, Guid userId)
+        {
+            PluginExecutionContextFake pluginContext = new PluginExecutionContextFake();
+            // if within your plugin you use other stuff of plugincontext, initialize it and put into pluginContext or Target
+            // e.g. pluginContext.BusinessUnitId = yourBuId
+            pluginContext.PrimaryEntityId = new Guid("12345678-1234-1234-1234-1234567890AB");
+            pluginContext.PrimaryEntityName = "account";
+            pluginContext.UserId = userId;
+            pluginContext.InitiatingUserId = userId;
+            pluginContext.InputParameters = new ParameterCollection();
+            // set your target record lie this
+            Entity e = new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB"));
+            e.Attributes["name"] = "someName";
+            pluginContext.InputParameters.Add("Target", e);
+            TestPlugin testPlugin = new TestPlugin();
+            // sample for plugin constructors requiering secure and unsecure config:
+            // TestPlugin testPlugin = new TestPlugin(yourSecureConfig, yourUnsecureConfig); //- both parameters can be null or empty string
+
+            PluginExecutor.Execute(testPlugin, client, pluginContext);
+        }
+
+
+        // use this sample if you don't trust Nuget packages and don't want to give client to Nuget Packages
+        static void SamplePluginNoTrustExecute(CrmServiceClient client, Guid userId)
         {
             PluginExecutionContextFake pluginContext = new PluginExecutionContextFake();
             pluginContext.PrimaryEntityId = new Guid("12345678-1234-1234-1234-1234567890AB");
             pluginContext.PrimaryEntityName = "account";
             pluginContext.UserId = userId;
             pluginContext.InputParameters = new ParameterCollection();
-            // set your target record here
             pluginContext.InputParameters.Add("Target", new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB")));
-            TestPlugin testPlugin = new TestPlugin();
-            // if within your plugin you use other stuff of plugincontext, initialize it and put into pluginContext
-            // e.g. pluginContext.BusinessUnitId = yourBuId
-            PluginExecutor.Execute(testPlugin, crmServiceClient, pluginContext);
+
+            // workaround - client goes directly to your plugin. PluginExecutor can't touch it. 
+            TestPluginNoTrust testPlugin = new TestPluginNoTrust();
+            ServiceFactoryFake serviceFactory = new ServiceFactoryFake();
+            serviceFactory.service = (IOrganizationService)client.OrganizationServiceProxy;
+            testPlugin.SetOrganizationServiceFactory( serviceFactory);
+            // end of workaround
+
+            PluginExecutor.Execute(testPlugin, null, pluginContext);
         }
     }
 }

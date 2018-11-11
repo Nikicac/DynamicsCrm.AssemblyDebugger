@@ -1,26 +1,21 @@
-﻿using System;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Workflow;
+﻿using Microsoft.Xrm.Sdk;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace CrmAssemblyDebugger.Fakes
+namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
-
-    public class CodeActivityContextFake : IWorkflowContext
+    public class PluginExecutionContextFake : IPluginExecutionContext
     {
-        public string StageName { get; set; }
+        public int Stage { get; set; }
 
-        public int WorkflowCategory { get; set; }
-
-        public int WorkflowMode { get; set; }
-
-        public IWorkflowContext ParentContext { get; set; }
+        public IPluginExecutionContext ParentContext { get; set; }
 
         public int Mode { get; set; }
 
         public int IsolationMode { get; set; }
 
         public int Depth { get; set; }
-
 
         public string MessageName { get; set; }
 
@@ -41,6 +36,7 @@ namespace CrmAssemblyDebugger.Fakes
         public Guid InitiatingUserId { get; set; }
 
         public Guid BusinessUnitId { get; set; }
+
         public Guid OrganizationId { get; set; }
 
         public string OrganizationName { get; set; }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xrm.Sdk;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CrmAssemblyDebugger.Fakes
+namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
-    class ServiceFactoryFake : IOrganizationServiceFactory
+    public class ServiceFactoryFake : IOrganizationServiceFactory
     {
         public IOrganizationService service; 
         public IOrganizationService CreateOrganizationService(Guid? userId)

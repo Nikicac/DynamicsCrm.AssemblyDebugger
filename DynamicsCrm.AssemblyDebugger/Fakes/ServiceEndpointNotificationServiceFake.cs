@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmAssemblyDebugger.Fakes
+namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
     public class ServiceEndpointNotificationServiceFake : IServiceEndpointNotificationService
     {

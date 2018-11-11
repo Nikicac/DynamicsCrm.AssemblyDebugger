@@ -1,10 +1,8 @@
-﻿using CrmAssemblyDebugger;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CrmAssemblyDebugger.Fakes
+
+namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
     public class ServiceProviderFake : IServiceProvider
     {

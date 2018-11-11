@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <!-- The identifier that must be unique within the hosting gallery -->
+    <id>DynamicsCrm.AssemblyDebugger</id>
+    <title>Dynamics Crm Assembly Debugger</title>
+
+    <!-- The package version number that is used when resolving dependencies -->
+    <version>1.0.0</version>
+
+    <!-- Authors contain text that appears directly on the gallery -->
+    <authors>Nikica Cvitkušić</authors>
+
+    <!-- 
+            Owners are typically nuget.org identities that allow gallery
+            users to easily find other packages by the same owners.  
+        -->
+    <owners>nikicac</owners>
+
+    <!-- License and project URLs provide links for the gallery -->
+    <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
+    <projectUrl>http://github.com/nikicac/DynamicsCrm.AssemblyDebugger</projectUrl>
+
+    <!-- The icon is used in Visual Studio's package manager UI -->
+    <iconUrl>http://github.com/contoso/UsefulStuff/nuget_icon.png</iconUrl>
+
+    <!-- 
+            If true, this value prompts the user to accept the license when
+            installing the package. 
+        -->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+
+    <!-- Any details about this particular release -->
+    <releaseNotes>First release version. Compiled with .net 4.5.2, Sdk 8.0. Shoudl work with all next versions.
+                  Only known issue: with some assembly projects, CrmServiceClient needs to be reinitialized after Plugin/Code activitity is executed. 
+                  just add something like: yourCrmServiceClient = new CrmServiceClient(yourConnectionString)"
+    </releaseNotes>
+
+    <!-- 
+            The description can be used in package manager UI. Note that the
+            nuget.org gallery uses information you add in the portal. 
+        -->
+    <description>Debbugging Dynamics CRM IPlugin and CodeActivity functions without deployment and profiling.</description>
+
+    <!-- Copyright information -->
+    <copyright>Nikica Cvitkušić</copyright>
+
+    <!-- Tags appear in the gallery and can be used for tag searches -->
+    <tags>Dynamics CRM 365 Plugin CodeActivity IPlugin Workflow Debugging</tags>
+
+    <!-- Dependencies are automatically installed when the package is installed -->
+    <dependencies>
+    </dependencies>
+  </metadata>
+
+  <!-- A readme.txt to display when the package is installed -->
+  <files>
+    <file src="bin/Release/DynamicsCrm.AssemblyDebugger.dll" target="lib/net452/DynamicsCrm.AssemblyDebugger.dll" />
+    <file src="readme.txt" target="" />
+  </files>
+</package>

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrmAssemblyDebugger.Fakes
+namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
     public class OrganizationServiceFactoryFake : IOrganizationServiceFactory
     {

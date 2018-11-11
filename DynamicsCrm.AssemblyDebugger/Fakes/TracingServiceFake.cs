@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using System;
 
-namespace CrmAssemblyDebugger.Fakes
+namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
     public class TracingServiceFake : ITracingService
     {
