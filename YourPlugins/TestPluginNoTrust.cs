@@ -7,10 +7,10 @@ namespace YourPlugins
     public class TestPluginNoTrust : IPlugin
     {
         // test interface 
-        private IOrganizationServiceFactory ServiceFactoryLocal;
+        private IOrganizationServiceFactory serviceFactoryLocal;
         public void SetOrganizationServiceFactory(IOrganizationServiceFactory factory)
         {
-            ServiceFactoryLocal = factory;
+            serviceFactoryLocal = factory;
         }
 
 
@@ -34,9 +34,9 @@ namespace YourPlugins
                     return;
                 try
                 {
-                    if (ServiceFactoryLocal == null)
-                        ServiceFactoryLocal = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
-                    var service = ServiceFactoryLocal.CreateOrganizationService(context.UserId);
+                    if (serviceFactoryLocal == null)
+                        serviceFactoryLocal = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+                    var service = serviceFactoryLocal.CreateOrganizationService(context.UserId);
                     var account = service.Retrieve("account", new Guid("12345678-1234-1234-1234-1234567890AB"), new ColumnSet(new string[] { "name", "accountid" }));
                     tracingService.Trace("Account received. Id: {account.Id}");
                 }
