@@ -9,7 +9,6 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
 using YourCodeActivities;
 using YourPlugins;
-using System.Activities;
 
 namespace TestApp
 {
@@ -18,12 +17,9 @@ namespace TestApp
         static void Main(string[] args)
         {
             var cs = "AuthType=Office365; Url=https://yoururl.crm.dynamics.com; UserName=username@yourcomapny.onmicrosoft.com; Password=YourPassword;";
-            
-            CrmServiceClient client = new CrmServiceClient(cs);
-            IOrganizationService os = client;
-            WhoAmIRequest req = new WhoAmIRequest();
-            WhoAmIResponse resp = (WhoAmIResponse)client.Execute(req);
-          
+            var client = new CrmServiceClient(cs);
+            var req = new WhoAmIRequest();
+            var resp = (WhoAmIResponse)client.Execute(req);
             // run plugin
             SamplePluginExecute(client, resp.UserId);
             //run code activity
@@ -35,14 +31,13 @@ namespace TestApp
         static IDictionary<string, object> SampleCodeActivityExecute(CrmServiceClient client, Guid userId)
         {
             var myActivity = new TestActivity();
-            CodeActivityContextFake context = new CodeActivityContextFake();
-            Dictionary<string, object> inputs = new Dictionary<string, object>();
+            var context = new CodeActivityContextFake();
             context = new CodeActivityContextFake();
             context.InitiatingUserId = userId;
             context.UserId = userId;
             context.PrimaryEntityName = "opportunity";
             context.PrimaryEntityId = new Guid("2A2B61B9-1234-ABCD-7891-B3223BFC9624");
-            inputs = new Dictionary<string, object>();
+            var inputs = new Dictionary<string, object>();
             inputs.Add(nameof(myActivity.StringInputOutput), "some string input");
             inputs.Add(nameof(myActivity.IntInputOutput), 858);
             inputs.Add(nameof(myActivity.LookupInputOutput), new EntityReference("account", new Guid()));
@@ -57,7 +52,7 @@ namespace TestApp
 
         static void SamplePluginExecute(CrmServiceClient client, Guid userId)
         {
-            PluginExecutionContextFake pluginContext = new PluginExecutionContextFake();
+            var pluginContext = new PluginExecutionContextFake();
             // if within your plugin you use other stuff of plugincontext, initialize it and put into pluginContext or Target
             // e.g. pluginContext.BusinessUnitId = yourBuId
             pluginContext.PrimaryEntityId = new Guid("12345678-1234-1234-1234-1234567890AB");
@@ -66,10 +61,10 @@ namespace TestApp
             pluginContext.InitiatingUserId = userId;
             pluginContext.InputParameters = new ParameterCollection();
             // set your target record lie this
-            Entity e = new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB"));
+            var e = new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB"));
             e.Attributes["name"] = "someName";
             pluginContext.InputParameters.Add("Target", e);
-            TestPlugin testPlugin = new TestPlugin();
+            var testPlugin = new TestPlugin();
             // sample for plugin constructors requiering secure and unsecure config:
             // TestPlugin testPlugin = new TestPlugin(yourSecureConfig, yourUnsecureConfig); //- both parameters can be null or empty string
 
@@ -80,7 +75,7 @@ namespace TestApp
         // use this sample if you don't trust Nuget packages and don't want to give client to Nuget Packages
         static void SamplePluginNoTrustExecute(CrmServiceClient client, Guid userId)
         {
-            PluginExecutionContextFake pluginContext = new PluginExecutionContextFake();
+            var pluginContext = new PluginExecutionContextFake();
             pluginContext.PrimaryEntityId = new Guid("12345678-1234-1234-1234-1234567890AB");
             pluginContext.PrimaryEntityName = "account";
             pluginContext.UserId = userId;
@@ -88,9 +83,9 @@ namespace TestApp
             pluginContext.InputParameters.Add("Target", new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB")));
 
             // workaround - client goes directly to your plugin. PluginExecutor can't touch it. 
-            TestPluginNoTrust testPlugin = new TestPluginNoTrust();
-            ServiceFactoryFake serviceFactory = new ServiceFactoryFake();
-            serviceFactory.service = (IOrganizationService)client.OrganizationServiceProxy;
+            var testPlugin = new TestPluginNoTrust();
+            var serviceFactory = new ServiceFactoryFake();
+            serviceFactory.service = client.OrganizationServiceProxy;
             testPlugin.SetOrganizationServiceFactory( serviceFactory);
             // end of workaround
 
