@@ -16,7 +16,8 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            var cs = "AuthType=Office365; Url=https://yoururl.crm.dynamics.com; UserName=username@yourcomapny.onmicrosoft.com; Password=YourPassword;";
+            var cs = "AuthType=Office365; Url=https://bestbest4.crm4.dynamics.com; UserName=nikica@bestbest4.onmicrosoft.com; Password=SomePass123;";
+            //var cs = "AuthType=Office365; Url=https://yoururl.crm.dynamics.com; UserName=username@yourcomapny.onmicrosoft.com; Password=YourPassword;";
             var client = new CrmServiceClient(cs);
             var req = new WhoAmIRequest();
             var resp = (WhoAmIResponse)client.Execute(req);
@@ -53,14 +54,14 @@ namespace TestApp
         static void SamplePluginExecute(CrmServiceClient client, Guid userId)
         {
             var pluginContext = new PluginExecutionContextFake();
-            // if within your plugin you use other stuff of plugincontext, initialize it and put into pluginContext or Target
+            // if within your plugin you use other stuff of plugincontext, initialize it and put appropriate
             // e.g. pluginContext.BusinessUnitId = yourBuId
+            //pluginContext.PreEntityImages.Add("name", someEntity);
             pluginContext.PrimaryEntityId = new Guid("12345678-1234-1234-1234-1234567890AB");
             pluginContext.PrimaryEntityName = "account";
             pluginContext.UserId = userId;
             pluginContext.InitiatingUserId = userId;
-            pluginContext.InputParameters = new ParameterCollection();
-            // set your target record lie this
+             // set your target record lie this
             var e = new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB"));
             e.Attributes["name"] = "someName";
             pluginContext.InputParameters.Add("Target", e);
@@ -79,7 +80,6 @@ namespace TestApp
             pluginContext.PrimaryEntityId = new Guid("12345678-1234-1234-1234-1234567890AB");
             pluginContext.PrimaryEntityName = "account";
             pluginContext.UserId = userId;
-            pluginContext.InputParameters = new ParameterCollection();
             pluginContext.InputParameters.Add("Target", new Entity("account", new Guid("12345678-1234-1234-1234-1234567890AB")));
 
             // workaround - client goes directly to your plugin. PluginExecutor can't touch it. 

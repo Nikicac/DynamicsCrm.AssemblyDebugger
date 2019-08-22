@@ -7,6 +7,14 @@ namespace DynamicsCrm.AssemblyDebugger.Fakes
 
     public class CodeActivityContextFake : IWorkflowContext
     {
+        public CodeActivityContextFake()
+        {
+            InputParameters = new ParameterCollection();
+            OutputParameters = new ParameterCollection();
+            SharedVariables = new ParameterCollection();
+            PreEntityImages = new EntityImageCollection();
+            PostEntityImages = new EntityImageCollection();
+        }
         public string StageName { get; set; }
 
         public int WorkflowCategory { get; set; }
