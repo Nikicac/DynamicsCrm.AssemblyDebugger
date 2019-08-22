@@ -7,6 +7,14 @@ namespace DynamicsCrm.AssemblyDebugger.Fakes
 {
     public class PluginExecutionContextFake : IPluginExecutionContext
     {
+        public PluginExecutionContextFake()
+        {
+            InputParameters = new ParameterCollection();
+            OutputParameters = new ParameterCollection();
+            SharedVariables = new ParameterCollection();
+            PreEntityImages = new EntityImageCollection();
+            PostEntityImages = new EntityImageCollection();
+        }
         public int Stage { get; set; }
 
         public IPluginExecutionContext ParentContext { get; set; }
